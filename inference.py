@@ -46,25 +46,31 @@ def constructBayesNet(gameState: hunters.GameState):
           it's non-negative and |obs - true| <= MAX_NOISE
     - this uses slightly simplified mechanics vs the ones used later for simplicity
     """
-    # constants to use
-    PAC = "Pacman"
-    GHOST0 = "Ghost0"
-    GHOST1 = "Ghost1"
-    OBS0 = "Observation0"
-    OBS1 = "Observation1"
-    X_RANGE = gameState.getWalls().width
-    Y_RANGE = gameState.getWalls().height
-    MAX_NOISE = 7
+    # Construct constants
+    pac, ghost0, ghost1, obs0, obs1 = "Pacman", "Ghost0", "Ghost1", \
+                                      "Observation0", "Observation1"
+    x_range, y_range, max_noise = gameState.getWalls().width, \
+                                  gameState.getWalls().height, 7
 
-    variables = []
-    edges = []
-    variableDomainsDict = {}
+    # Construct variables list
+    variables = [pac, ghost0, ghost1, obs0, obs1]
 
-    "*** YOUR CODE HERE ***"
-    raiseNotDefined()
-    "*** END YOUR CODE HERE ***"
+    # Construct edge list
+    edges = [(ghost0, obs0), (pac, obs0), (pac, obs1), (ghost1, obs1)]
 
-    net = bn.constructEmptyBayesNet(variables, edges, variableDomainsDict)
+    # Construct agent locations list; all permutations of (x, y) coords
+    agents_domain = [(x, y) for x in range(x_range) for y in range(y_range)]
+
+    # Construct observations; Manhattan distances of Pacman to ghosts +- noise
+    obs_domain = [i for i in range(0, x_range + y_range - 1 + max_noise)]
+
+    # Construct the domain for each variable (location of each thing)
+    variable_domains_dict = {pac: agents_domain, ghost0: agents_domain,
+                             ghost1: agents_domain, obs0: obs_domain,
+                             obs1: obs_domain}
+
+    # Construct the Bayes Net
+    net = bn.constructEmptyBayesNet(variables, edges, variable_domains_dict)
     return net
 
 

@@ -93,17 +93,42 @@ def joinFactors(factors: List[Factor]):
     if len(factors) > 1:
         intersect = functools.reduce(lambda x, y: x & y, setsOfUnconditioned)
         if len(intersect) > 0:
-            print("Factor failed joinFactors typecheck: ", factor)
+            print("Factor failed joinFactors typecheck: ", factors)
             raise ValueError("unconditionedVariables can only appear in one factor. \n"
                     + "unconditionedVariables: " + str(intersect) + 
                     "\nappear in more than one input factor.\n" + 
                     "Input factors: \n" +
                     "\n".join(map(str, factors)))
 
-
     "*** YOUR CODE HERE ***"
-    raiseNotDefined()
-    "*** END YOUR CODE HERE ***"
+    # Construct set of unconditioned/conditioned variables
+    unconditioned_vars, conditioned_vars = set(), set()
+
+    # Construct variable domains dictionary
+    variable_domains_dict = list(factors)[0].variableDomainsDict()
+
+    # Populate the unconditioned/conditioned variables
+    for factor in factors:
+        unconditioned_vars.update(factor.unconditionedVariables())
+        conditioned_vars.update(factor.conditionedVariables())
+        conditioned_vars.difference_update(unconditioned_vars)
+
+    # Construct the new factor, joined from new variables
+    joined_factor = Factor(unconditioned_vars, conditioned_vars,
+                           variable_domains_dict)
+
+    # Update the probability of each assn_dict for the new factor
+    for assn_dict in joined_factor.getAllPossibleAssignmentDicts():
+        probability = 1
+
+        # Incorporate the probability of each factor in the assn_dict
+        for factor in factors:
+            probability *= factor.getProbability(assn_dict)
+        joined_factor.setProbability(assn_dict, probability)
+
+    # Return a new factor whose probability entries are row products
+    return joined_factor
+
 
 ########### ########### ###########
 ########### QUESTION 3  ###########

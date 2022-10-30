@@ -178,7 +178,6 @@ def inferenceByVariableEliminationWithCallTracking(callTrackingList=None):
         joinFactorsByVariable
         joinFactors
         """
-
         # this is for autograding -- don't modify
         joinFactorsByVariable = joinFactorsByVariableWithCallTracking(callTrackingList)
         eliminate             = eliminateWithCallTracking(callTrackingList)
@@ -188,9 +187,18 @@ def inferenceByVariableEliminationWithCallTracking(callTrackingList=None):
             eliminationOrder = sorted(list(eliminationVariables))
 
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
-        "*** END YOUR CODE HERE ***"
+        # print(f'\n\n-------------------------------------')
+        #
+        # print(f'-------------------------------------\n\n')
 
+        factors = bayesNet.getAllCPTsWithEvidence(evidenceDict)
+        for var in eliminationOrder:
+            factors, factor = joinFactorsByVariable(factors, var)
+            if len(factor.unconditionedVariables()) > 1:
+                eliminated = eliminate(factor, var)
+                factors.append(eliminated)
+        joined = joinFactors(factors)
+        return normalize(joined)
 
     return inferenceByVariableElimination
 

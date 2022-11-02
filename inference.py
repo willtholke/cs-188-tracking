@@ -12,8 +12,10 @@
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
 
+from getopt import gnu_getopt
 import random
 import itertools
+from tkinter import N
 from typing import List, Dict, Tuple
 import busters
 import game
@@ -332,8 +334,13 @@ class DiscreteDistribution(dict):
         {}
         """
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
-        "*** END YOUR CODE HERE ***"
+        total = self.total()
+        if not total:
+            return
+
+        for k in self.keys():
+            self[k] = self[k] / total
+        return 
 
     def sample(self):
         """
@@ -357,8 +364,14 @@ class DiscreteDistribution(dict):
         0.0
         """
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
-        "*** END YOUR CODE HERE ***"
+        rv = random.random() 
+        total = self.total()
+        amt = 0 
+        for k in self.keys():
+            amt += self[k] / total
+            if amt > rv:
+                return k
+        return 
 
 
 class InferenceModule:
@@ -432,8 +445,17 @@ class InferenceModule:
         Return the probability P(noisyDistance | pacmanPosition, ghostPosition).
         """
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
-        "*** END YOUR CODE HERE ***"
+        #Noisyditance == None return 1
+        #noisy not none return 0
+        #check if noisy distance == None
+        if ghostPosition == jailPosition and noisyDistance == None:
+                return 1
+        elif ghostPosition == jailPosition or noisyDistance == None:
+            return 0
+        value = manhattanDistance(pacmanPosition, ghostPosition)
+
+        return busters.getObservationProbability(noisyDistance, value)
+
 
     def setGhostPosition(self, gameState, ghostPosition, index):
         """

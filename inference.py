@@ -16,6 +16,7 @@ from getopt import gnu_getopt
 import random
 import itertools
 from tkinter import N
+from turtle import position
 from typing import List, Dict, Tuple
 import busters
 import game
@@ -590,7 +591,13 @@ class ExactInference(InferenceModule):
         current position is known.
         """
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+        newCopy = DiscreteDistribution()
+        for pos in self.allPositions:
+            newPosDist = self.getPositionDistribution(gameState, pos)
+            for p in newPosDist.keys():
+                newCopy[p] += self.beliefs[pos] * newPosDist[p]
+        self.beliefs = newCopy
+
         "*** END YOUR CODE HERE ***"
 
     def getBeliefDistribution(self):

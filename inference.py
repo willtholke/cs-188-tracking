@@ -450,7 +450,7 @@ class InferenceModule:
         #noisy not none return 0
         #check if noisy distance == None
         if ghostPosition == jailPosition and noisyDistance == None:
-                return 1
+            return 1
         elif ghostPosition == jailPosition or noisyDistance == None:
             return 0
         value = manhattanDistance(pacmanPosition, ghostPosition)
@@ -572,7 +572,7 @@ class ExactInference(InferenceModule):
         #we use getobservation probability to modify the self.beliefs,
         
         for pos in self.allPositions:
-            self.beliefs[pos] = self.beliefs[pos] * self.getObservationProb(observation , gameState.getPacmanPosition(), pos, self.getJailPosition)
+            self.beliefs[pos] = self.beliefs[pos] * self.getObservationProb(observation , gameState.getPacmanPosition(), pos, self.getJailPosition())
 
         "*** END YOUR CODE HERE ***"
         self.beliefs.normalize()

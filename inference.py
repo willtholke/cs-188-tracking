@@ -21,6 +21,7 @@ from typing import List, Dict, Tuple
 import busters
 import game
 import bayesNet as bn
+import util
 from bayesNet import normalize
 import hunters
 from util import manhattanDistance, raiseNotDefined
@@ -627,10 +628,12 @@ class ParticleFilter(InferenceModule):
         distributed across positions in order to ensure a uniform prior. Use
         self.particles for the list of particles.
         """
-        self.particles = []
-        "*** YOUR CODE HERE ***"
-        raiseNotDefined()
-        "*** END YOUR CODE HERE ***"
+        self.particles, pos = [], 0
+        while len(self.particles) < self.numParticles:
+            # add particles from the legalPositions list
+            # if at the end of the legalPositions list, return to the beginning
+            self.particles.append(self.legalPositions[pos % len(self.legalPositions)])
+            pos += 1
 
     def getBeliefDistribution(self):
         """
@@ -640,9 +643,11 @@ class ParticleFilter(InferenceModule):
 
         This function should return a normalized distribution.
         """
-        "*** YOUR CODE HERE ***"
-        raiseNotDefined()
-        "*** END YOUR CODE HERE ***"
+        dist = util.Counter()
+        for particle in self.particles:
+            dist[particle] += 1
+        dist.normalize()
+        return dist
     
     ########### ########### ###########
     ########### QUESTION 10 ###########

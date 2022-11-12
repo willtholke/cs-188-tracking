@@ -801,15 +801,18 @@ class JointParticleFilter(ParticleFilter):
         """
         newParticles = []
         for oldParticle in self.particles:
-            newParticle = list(oldParticle)  # A list of ghost positions
-
-            # now loop through and update each entry in newParticle...
-            "*** YOUR CODE HERE ***"
-            raiseNotDefined()
-            """*** END YOUR CODE HERE ***"""
-            newParticles.append(tuple(newParticle))
+            newParticle = list(oldParticle)
+            all_samples = []
+            for i in range(self.numGhosts):
+                newPosDist = self.getPositionDistribution(gameState,
+                                                          newParticle,
+                                                          i,
+                                                          self.ghostAgents[i])
+                sample = newPosDist.sample()
+                all_samples.append(sample)
+            formatted_samples = (tuple(all_samples))
+            newParticles.append(formatted_samples)
         self.particles = newParticles
-
 
 # One JointInference module is shared globally across instances of MarginalInference
 jointInference = JointParticleFilter()

@@ -771,9 +771,24 @@ class JointParticleFilter(ParticleFilter):
         be reinitialized by calling initializeUniformly. The total method of
         the DiscreteDistribution may be useful.
         """
-        "*** YOUR CODE HERE ***"
-        raiseNotDefined()
-        "*** END YOUR CODE HERE ***"
+        particle_weights = DiscreteDistribution()
+
+        for particle in self.particles:
+            prob = 1
+            for i in range(self.numGhosts):
+                prob *= self.getObservationProb(
+                    observation[i], gameState.getPacmanPosition(), particle[i],
+                    self.getJailPosition(i))
+            particle_weights[particle] += prob
+
+        if particle_weights.total() == 0:
+            self.initializeUniformly(gameState)
+            return
+
+        particle_weights.normalize()
+        self.particles = [particle_weights.sample() for _ in range(self.numParticles)]
+
+
 
     ########### ########### ###########
     ########### QUESTION 14 ###########

@@ -694,10 +694,14 @@ class ParticleFilter(InferenceModule):
         Sample each particle's next state based on its current state and the
         gameState.
         """
-        "*** YOUR CODE HERE ***"
-        raiseNotDefined()
-        "*** END YOUR CODE HERE ***"
-
+        # construct a new list of particles that correspond to each existing
+        # particle advancing a time step
+        new_particles = []
+        for particle in self.particles:
+            # new distribution of particle positions
+            new_pos_dict = self.getPositionDistribution(gameState, particle)
+            new_particles.append(new_pos_dict.sample())
+        self.particles = new_particles
 
 
 class JointParticleFilter(ParticleFilter):

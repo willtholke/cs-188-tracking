@@ -732,9 +732,12 @@ class JointParticleFilter(ParticleFilter):
         uniform prior.
         """
         self.particles = []
-        "*** YOUR CODE HERE ***"
-        raiseNotDefined()
-        "*** END YOUR CODE HERE ***"
+        cartesian = list(itertools.product(self.legalPositions, self.legalPositions))
+        random.shuffle(cartesian)
+        pos = 0
+        while len(self.particles) < self.numParticles:
+            self.particles.append(cartesian[pos % len(cartesian)])
+            pos += 1
 
     def addGhostAgent(self, agent):
         """
